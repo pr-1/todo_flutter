@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 class Landing extends StatelessWidget {
   @override
@@ -82,139 +83,15 @@ class AppState extends State<App> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
-            child: TextField(
-              decoration: InputDecoration(hintText: "Enter Todo Text Here"),
-              style: TextStyle(
-                fontSize: 22.0,
-                //color: Theme.of(context).accentColor,
-              ),
-              controller: textController,
-              cursorWidth: 5.0,
-              autocorrect: true,
-              autofocus: true,
-              //onSubmitted: ,
-            ),
+          RadioButtonGroup(
+            labels: [
+              "Option 1",
+              "Option 2",
+            ],
+            onChange: (String label, int index) => print("label: $label index: $index"),
+            onSelected: (String label) => print(label),
           ),
-          RaisedButton(
-            child: Text("Add Todo"),
-            onPressed: () {
-              if (textController.text.isNotEmpty) {
-                WidgetList.add(new ListItem(textController.text, false));
-                setState(() {
-                  textController.clear();
-                });
-              }
-            },
-          ),
-          Expanded(
-            child: ReorderableListView(
-              children: <Widget>[
-                for (final widget in WidgetList)
-                  GestureDetector(
-                    key: Key(widget.todoText),
-                    child: Dismissible(
-                      key: Key(widget.todoText),
-                      child: CheckboxListTile(
-                        //key: ValueKey("Checkboxtile $widget"),
-                        value: widget.todoCheck,
-                        title:
-                            _strikeThrough(widget.todoText, widget.todoCheck),
-                        onChanged: (checkValue) {
-                          //_strikethrough toggle
-                          setState(() {
-                            if (!checkValue) {
-                              widget.todoCheck = false;
-                            } else {
-                              widget.todoCheck = true;
-                            }
-                          });
-                        },
-                      ),
-                      background: Container(
-                        child: Icon(Icons.delete),
-                        alignment: Alignment.centerRight,
-                        color: Colors.orange[300],
-                      ),
-                      confirmDismiss: (dismissDirection) {
-                        return showDialog(
-                            //On Dismissing
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Delete Todo?"),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text("OK"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(true);
-                                    },
-                                  ), //OK Button
-                                  FlatButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                  ), //Cancel Button
-                                ],
-                              );
-                            });
-                      },
-                      direction: DismissDirection.endToStart,
-                      movementDuration: const Duration(milliseconds: 200),
-                      onDismissed: (dismissDirection) {
-                        //Delete Todo
-                        WidgetList.remove(widget);
 
-                      },
-                    ),
-                    onDoubleTap: () {
-                      popUpTextController.text = widget.todoText;
-                      //For Editing Todo
-                      showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Edit Todo"),
-                              content: TextFormField(
-                                controller: popUpTextController,
-                              ),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    setState(() {
-                                      widget.todoText =
-                                          popUpTextController.text;
-                                    });
-                                    Navigator.of(context).pop(true);
-                                  },
-                                ), //OK Button
-                                FlatButton(
-                                  child: Text("Cancel"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                ), //Cancel Button
-                              ],
-                            );
-                          });
-                    },
-                  )
-              ],
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  var replaceWiget = WidgetList.removeAt(oldIndex);
-                  WidgetList.insert(newIndex, replaceWiget);
-                });
-              },
-            ),
-          )
         ],
       ),
     );

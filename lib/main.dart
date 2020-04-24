@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/presentations/landing.dart';
 import 'package:todo_app/providers/supply_providers.dart';
+import 'package:todo_app/routes.dart';
 
 
 
@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
-        routes: {
-          '/': (context) => Landing(),
-        },
+        routes: getRoutes,
       ),
     );
   }
